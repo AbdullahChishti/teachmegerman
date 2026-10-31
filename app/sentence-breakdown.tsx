@@ -1,0 +1,10 @@
+'use client';
+import {useState} from 'react';
+import {sentenceGuides} from '@/lib/sentence-guide';
+export default function SentenceBreakdown({lesson}:{lesson:number}){
+ const guide=sentenceGuides[lesson];
+ const [selected,setSelected]=useState(0);
+ if(!guide)return null;
+ const word=guide.words[selected]??guide.words[0];
+ return <section className="sentence-guide" aria-label="Sentence explanation"><div className="eyebrow">UNDERSTAND IT, WORD BY WORD</div><h3>How this sentence comes together</h3><p className="guide-intro">Choose any word to see its meaning, its job, and why it takes this form.</p><div className="word-picker" role="group" aria-label="Words in the sentence">{guide.words.map((w,i)=><button key={i} aria-pressed={i===selected} onClick={()=>setSelected(i)}><strong>{w.word}</strong><span>{w.meaning}</span></button>)}</div><div className="word-explanation" aria-live="polite" aria-atomic="true"><div className="word-heading"><h4>{word.word}</h4><span>{word.meaning}</span></div><dl><div><dt>Its job</dt><dd>{word.job}</dd></div><div><dt>Why this word?</dt><dd>{word.why}</dd></div><div><dt>How it changes</dt><dd>{word.change}</dd></div></dl></div><div className="sentence-structure"><span className="eyebrow">THE SENTENCE FRAME</span><p className="structure-pattern">{guide.pattern}</p><p>{guide.connection}</p><details><summary>See the word-for-word English</summary><p>{guide.literal}</p><small>This shows the German order. It is a guide to the structure, rather than natural English.</small></details></div><details className="sentence-swaps"><summary>Change a word. See what changes with it.</summary><div>{guide.swaps.map(s=><article key={s.de}><h4 lang="de">{s.de}</h4><p>{s.en}</p><p className="swap-why">{s.why}</p></article>)}</div></details></section>
+}
